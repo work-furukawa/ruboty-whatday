@@ -1,4 +1,5 @@
 require "ruboty/whatday/version"
+require 'ruboty/handlers/whatday'
 
 module Ruboty
   module Whatday
