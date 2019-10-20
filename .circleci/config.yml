@@ -1,0 +1,50 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2.1
+executors:
+  my-executor:
+    docker:
+      - image: circleci/ruby:2.6.5-node-browsers
+        environment:
+          BUNDLER_VERSION: 2.0.2
+    working_directory: ~/ruboty-whatday
+
+commands:
+  setup-bundler:
+    description: "setup bundler 2"
+    steps:
+      - run: sudo gem update --system
+      - run: sudo gem uninstall bundler
+      - run: sudo rm /usr/local/bin/bundle
+      - run: sudo rm /usr/local/bin/bundler
+      - run: sudo gem install bundler
+
+jobs:
+  my-job:
+    executor: my-executor
+    steps:
+      - setup-bundler
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+      - run: bundle update rake
+      - run: bundle exec rake spec
+
+workflows:
+  my-workflow:
+    jobs:
+      - my-job
