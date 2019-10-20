@@ -16,10 +16,7 @@ commands:
     description: "setup bundler 2"
     steps:
       - run: sudo gem update --system
-      - run: sudo gem uninstall bundler
-      - run: sudo rm /usr/local/bin/bundle
-      - run: sudo rm /usr/local/bin/bundler
-      - run: sudo gem install bundler
+      - run: sudo gem install bundler -v "2.0.2" --force
 
 jobs:
   my-job:
