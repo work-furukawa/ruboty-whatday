@@ -1,5 +1,8 @@
 require "bundler/setup"
+require "ruboty"
 require "ruboty/whatday"
+require "ruboty/handlers/whatday"
+require "ruboty/whatday/actions/whatday"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
